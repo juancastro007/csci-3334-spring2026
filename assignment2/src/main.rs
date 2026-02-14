@@ -18,7 +18,7 @@
 
 
 fn is_even(n: i32) -> bool {
-    // if n/2
+    n % 2 == 0
 }
 
 fn main() {
