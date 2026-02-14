@@ -48,17 +48,20 @@ fn main() {
         
     }
 
-    for num in num_array.iter() {
-        print!("{}", num);
+    let mut incrementor = 0;
+    let mut _sum = 0;
+    while incrementor < num_array.len(){
+        _sum += num_array[incrementor];
+        incrementor += 1;
     }
-    println!();
+    println!("Sum of the array is: {}", _sum);
+
+    //setting the variable as the value of the first element in the array
+    let mut largest = num_array[0];
+    for num in num_array {
+        if num > largest {
+            largest = num;
+        }
+    }
+    println!("Largest number: {}", largest);
 }
-
-// while loop, w/ counter = arraysize
-// let mut total = 0
-// start loop
-// total += element value
-// finish loop
-// println!("The sum of the numbers in the array is: {}", total);
-
-// 
