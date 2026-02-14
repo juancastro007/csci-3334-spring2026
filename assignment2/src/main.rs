@@ -21,31 +21,43 @@ fn is_even(n: i32) -> bool {
     n % 2 == 0
 }
 
+
 fn main() {
     let num_array: [i32; 10] = [1,2,3,4,5,6,7,8,9,15];
     println!("array is: {:?}", num_array);
 
 
-
     for num in num_array {
         if is_even(num) {
-            println!("{} is even", num);
+            //not correctly running "FizzBuzz" if placed after the other two
+            if num % 3 == 0 && num % 5 == 0 {
+                println!("FizzBuzz")
+            }
+            else if num % 3 == 0 {
+                println!("Fizz")
+            }
+            else if num % 5 == 0 {
+                println!("Buzz")
+            }
+            else {
+                println!("{} is even", num);
+            }
         }
         else {
-            println!("{} is odd", num);
+            //not correctly running "FizzBuzz" if placed after the other two
+            if num % 3 == 0 && num % 5 == 0 {
+                println!("FizzBuzz")
+            }
+            else if num % 3 == 0 {
+                println!("Fizz")
+            }
+            else if num % 5 == 0 {
+                println!("Buzz")
+            }
+            else {
+                println!("{} is odd", num);
+            }
         }
-
-         //not correctly running "FizzBuzz" if placed after the other two
-        if num % 3 == 0 && num % 5 == 0 {
-            println!("FizzBuzz")
-        }
-        else if num % 3 == 0 {
-            println!("Fizz")
-        }
-        else if num % 5 == 0 {
-            println!("Buzz")
-        }
-        
     }
 
     let mut incrementor = 0;
