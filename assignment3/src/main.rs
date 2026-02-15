@@ -31,9 +31,9 @@ fn check_guess(guess: i32, secret_num: i32) -> i32 {
 }
 
 fn main () {
-    let mut secret_num = 7;
+    let secret_num = 7;
 
-    let mut guess_count = 0;
+    let mut guess_count: i32 = 0;
 
     let guesses: [i32; 10] = [1,2,3,4,5,6,7,8,9,15];
 
@@ -42,18 +42,19 @@ fn main () {
     loop {
         let guess = guesses[index];
         guess_count += 1;
-        println!("Guess #{:?}: {}", guesses, guess);
+        println!("Guess #{:?}: {}", index+1, guess);
 
         let result = check_guess(guess, secret_num);
 
         if result == 0 {
-            println!("Correct guess")
+            println!("Correct guess");
+            break;
         }
         else if result == 1 {
-            println!("Guess is too high")
+            println!("Guess is too high");
         }
         else if result == -1 {
-            println!("Guess is too low")
+            println!("Guess is too low");
         }
         index += 1;
     }
