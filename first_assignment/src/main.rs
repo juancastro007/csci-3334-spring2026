@@ -33,9 +33,9 @@ fn main() {
     println!("Given temps {}F, you get {}C", temp_f,temp_c);
 
     println!("The next five degrees in F get converted to:");
-    for _count in 1..5 {
+    for _count in 0..5 {
         temp_f += 1.0;
         let temp_c = fahrenheit_to_celsius(temp_f);
-        println!("{}F = {}C", temp_f, temp_c);
+        println!("{:.2}F = {:.3}C", temp_f, temp_c);
     }
 }
