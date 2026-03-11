@@ -31,9 +31,14 @@ fn main() {
 
                 let amount: f64 = input.trim().parse().unwrap_or(0.0);
 
-                account.deposit(amount);
+                if amount <= 0.0 {
+                    println!("Invalid amount");
+                }
+                else {
+                    account.deposit(amount);
+                    println!("Successfully deposited");
+                }
 
-                println!("Successfully deposited");
             }
 
             //withdraw
@@ -45,9 +50,17 @@ fn main() {
 
                 let amount: f64 = input.trim().parse().unwrap_or(0.0);
 
-                account.withdraw(amount);
+                if amount <= 0.0 {
+                    println!("Invalid amount");
+                }
+                else if amount > account.balance() {
+                    println!("Insufficient funds");
+                }
+                else {
+                    account.withdraw(amount);
+                    println!("Successfully withdrawn");
+                }
 
-                println!("Successfully withdrawn");
             }
 
             //check balance
