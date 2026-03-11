@@ -30,7 +30,8 @@ fn save_books(books: &Vec<Book>, filename: &str) {
     let mut file = File::create(filename).expect("Could not create file");
 
     for book in books {
-        writeln!(file, "{}, {}, {}", book.title, book.author, book.year).expect("Could not write to file");
+        writeln!(file, "{}, {}, {}", book.title, book.author, book.year)
+        .expect("Could not write to file");
     }
 }
 
