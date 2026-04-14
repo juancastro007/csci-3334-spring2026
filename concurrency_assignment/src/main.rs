@@ -1,5 +1,5 @@
 // Assignment #3
-
+/*
 use std::sync::{mpsc, Arc, Mutex};
 use std::thread;
 use std::time::Duration;
@@ -122,6 +122,115 @@ fn main() {
 
     println!("Main thread waiting for tasks to complete...");
     // pool is dropped here, which sends terminate messages and joins workers
-}
+}*/
 
 /////////////////////////////////////////////////////
+
+// Assignment #4
+use std::sync::{mpsc, Arc, Mutex};
+use std::thread;
+use std::time::Duration;
+use rand::Rng;
+
+// Special value to tell consumers to stop
+const TERMINATION_SIGNAL: i32 = -1;
+
+fn main() {
+    // Total number of items to produce
+    const ITEM_COUNT: usize = 20;
+
+    // Number of producers and consumers
+    const NUM_PRODUCERS: usize = 2;
+    const NUM_CONSUMERS: usize = 3;
+
+    // Create a channel
+    let (tx, rx) = mpsc::channel();
+
+    // Wrap receiver so multiple consumers can share it safely
+    let rx = Arc::new(Mutex::new(rx));
+
+    // Store thread handles
+    let mut producer_handles = vec![];
+    let mut consumer_handles = vec![];
+
+    // Split the work between 2 producers
+    let items_per_producer = ITEM_COUNT / NUM_PRODUCERS;
+
+    // Create 2 producer threads
+    for id in 1..=NUM_PRODUCERS {
+        let tx_clone = tx.clone();
+
+        let handle = thread::spawn(move || {
+            producer(id, tx_clone, items_per_producer);
+        });
+
+        producer_handles.push(handle);
+    }
+
+    // Create 3 consumer threads
+    for id in 1..=NUM_CONSUMERS {
+        let rx_clone = Arc::clone(&rx);
+
+        let handle = thread::spawn(move || {
+            consumer(id, rx_clone);
+        });
+
+        consumer_handles.push(handle);
+    }
+
+    // Wait for all producers to finish first
+    for handle in producer_handles {
+        handle.join().unwrap();
+    }
+
+    // Main thread sends one termination signal per consumer
+    for _ in 0..NUM_CONSUMERS {
+        tx.send(TERMINATION_SIGNAL).unwrap();
+    }
+
+    // Wait for all consumers to finish
+    for handle in consumer_handles {
+        handle.join().unwrap();
+    }
+
+    println!("All items have been produced and consumed!");
+}
+
+// Producer sends random numbers into the channel
+fn producer(id: usize, tx: mpsc::Sender<i32>, item_count: usize) {
+    let mut rng = rand::thread_rng();
+
+    for item_num in 1..=item_count {
+        let value = rng.gen_range(1..=100);
+
+        println!("Producer {} generated item {}: {}", id, item_num, value);
+
+        tx.send(value).unwrap();
+
+        // Simulate production time
+        thread::sleep(Duration::from_millis(100));
+    }
+
+    println!("Producer {} finished producing.", id);
+}
+
+// Consumer receives numbers and processes them
+fn consumer(id: usize, rx: Arc<Mutex<mpsc::Receiver<i32>>>) {
+    loop {
+        // Receive one value from the channel
+        let value = {
+            let receiver = rx.lock().unwrap();
+            receiver.recv().unwrap()
+        };
+
+        if value == TERMINATION_SIGNAL {
+            println!("Consumer {} received termination signal and is exiting.", id);
+            break;
+        }
+
+        println!("Consumer {} processed value {}", id, value);
+
+        // Simulate work
+        thread::sleep(Duration::from_millis(150));
+    }
+}
